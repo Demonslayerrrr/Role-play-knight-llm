@@ -1,7 +1,15 @@
 import ollama
+import pyttsx3
 from colorama import init, Fore
 
 init(autoreset=True)
+
+
+engine = pyttsx3.init()
+engine.setProperty('rate', 150)  
+engine.setProperty('volume', 1)  
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[1].id)
 
 def colorize_text(role, text):
     if role == "user":
@@ -21,7 +29,6 @@ Your understanding of the world is based on the teachings of the Church, the chi
 Speak and act with humility, faith, and conviction, always staying true to your role as a knight of Christendom.
 """
 
-
 conversation = [{"role":"user", "content":role}]
 
 def talk_to_knight(input):
@@ -35,12 +42,18 @@ def talk_to_knight(input):
 
     return reply
 
+def knight_voiceover(text):
+    engine.say(text)
+    engine.runAndWait()
 
 while True:
-    user_input = input(colorize_text("user","You: "))
+    user_input = input(colorize_text("user", "You: "))
 
     if user_input.lower() == "q":
         break
 
     reply = talk_to_knight(user_input)
-    print(colorize_text("knight",f"\nKnight: {reply}\n"))
+    print(colorize_text("knight", f"\nKnight: {reply}\n"))
+
+
+    knight_voiceover(reply)
